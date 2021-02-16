@@ -8,6 +8,11 @@ def raise_type_error(message):
 
 
 class CoinClient:
+    # Response object keys
+    # prices
+    # market_caps
+    # total_volumes
+
     def __init__(self, ticker):
         self.ticker = ticker
         self.cg = CoinGeckoAPI()
@@ -35,7 +40,12 @@ class RawResponse:
     def beautify(self):
         if isinstance(self.data, dict):
             pass
+
         elif isinstance(self.data, list):
-            pass
+            for c in self.data:
+                pass
+
         else:
             raise_type_error("Data must either be a dict or a list of dicts")
+
+# datetime.fromtimestamp(end_date)
