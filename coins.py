@@ -1,5 +1,5 @@
-from datetime import datetime
 import config
+from datetime import datetime
 from pycoingecko import CoinGeckoAPI
 
 
