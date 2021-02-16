@@ -1,23 +1,18 @@
 from datetime import datetime
 import config
-import requests
+from pycoingecko import CoinGeckoAPI
 
 
 class CoinClient:
-    cmc_endpoint = "https://pro-api.coinmarketcap.com/v1/cryptocurrency"
 
     def __init__(self, ticker):
         self.ticker = ticker
-        self.api_header = {"X-CMC_PRO_API_KEY": config.cmc_api}
+        self.cg = CoinGeckoAPI()
 
-    def fetch_historical(self, s, e):
-        data = {}
-        response = requests.get(f"{self.cmc_endpoint}/listings/historical", headers=self.api_header).json()
-
-    def get_between(self, start_date: datetime, end_date: datetime):
+    def get_between(self, start_date: float, end_date: float):
         if isinstance(self.ticker, str):
-            return True,
+            return True, self.cg.get_coin_market_chart_range_by_id(self.ticker, config.currency, start_date, end_date)
         elif isinstance(self.ticker, list):
-            return True,
+            pass
         else:
             return False, "Ticker is not an instance of str or list."
