@@ -7,7 +7,6 @@ start_date = (datetime.today() - timedelta(days=365)).timestamp()
 coin = coins.CoinClient('stellar')
 resp = coin.get_between(start_date, end_date)
 
-
 raw = coins.RawResponse(resp)
-d = raw.beautify_between()
-print(d)
+parse = coins.ParseClear(raw.beautify_between())
+parse.parse_days(180)

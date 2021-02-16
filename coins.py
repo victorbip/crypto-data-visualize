@@ -43,7 +43,7 @@ class RawResponse:
         self.data = data
         self.response_dict = dict()
 
-    def iterate(self, ls):
+    def __iterate(self, ls):
         # Iterate over the array with values [unix, value]
         arr = list()
         for i in ls:
@@ -56,17 +56,41 @@ class RawResponse:
         if isinstance(data, dict):
             # Check if data is a list or not, if yes it iterates over the names of the coins
             if l:
+                self.response_dict['multiple'] = True
                 for c in data:
                     self.response_dict[c] = {}
                     for k in data[c]:
                         # Update dict_key[coin] with k(price, total_volumes, market_caps) with [[datetime, value], etc.]
-                        self.response_dict[c].update({k: self.iterate(data[c][k])})
+                        self.response_dict[c].update({k: self.__iterate(data[c][k])})
             else:
+                self.response_dict['multiple'] = False
                 for k in data:
                     # Update k(price, total_volumes, market_caps) with [[datetime, value], etc.]
-                    self.response_dict.update({k: self.iterate(data[k])})
+                    self.response_dict.update({k: self.__iterate(data[k])})
         else:
             # Raise type error, data is not a dict.
             raise_type_error("Data must either be of type dict")
+
         # Return response dict
         return self.response_dict
+
+
+class ParseClear:
+    # Reformat clear/parsed data from RawResponse
+    def __init__(self, data: dict):
+        self.data = data
+
+    # Interval = amount of days to skip (7 to get weekly data, 30 to get monthly, etc.)
+    def parse_days(self, interval: int):
+        is_multiple = self.data['multiple']
+        del self.data['multiple']
+        if is_multiple:
+            for c in self.data:
+                for k in self.data[c]:
+                    self.data[c][k] = self.data[c][k][::interval]
+
+        else:
+            for k in self.data:
+                self.data[k] = self.data[k][::interval]
+
+        return self.data
