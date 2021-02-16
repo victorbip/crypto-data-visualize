@@ -3,16 +3,38 @@ import config
 from pycoingecko import CoinGeckoAPI
 
 
+def raise_type_error(message):
+    raise TypeError(message)
+
+
 class CoinClient:
 
     def __init__(self, ticker):
         self.ticker = ticker
         self.cg = CoinGeckoAPI()
+        self.response_dict = dict()
 
     def get_between(self, start_date: float, end_date: float):
         if isinstance(self.ticker, str):
-            return True, self.cg.get_coin_market_chart_range_by_id(self.ticker, config.currency, start_date, end_date)
+            return self.cg.get_coin_market_chart_range_by_id(self.ticker, config.currency, start_date, end_date)
+
         elif isinstance(self.ticker, list):
+            for c in self.ticker:
+                self.response_dict[c] = self.cg.get_coin_market_chart_range_by_id(c, config.currency, start_date, end_date)
+            return self.response_dict
+
+        else:
+            raise_type_error("Ticker must either be a string or list of strings.")
+
+
+class RawResponse:
+    def __init__(self, data):
+        self.data = data
+
+    def beautify(self):
+        if isinstance(self.data, dict):
+            pass
+        elif isinstance(self.data, list):
             pass
         else:
-            return False, "Ticker is not an instance of str or list."
+            raise_type_error("Data must either be a dict or a list of dicts")
