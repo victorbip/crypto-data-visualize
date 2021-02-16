@@ -44,8 +44,10 @@ class RawResponse:
         self.response_dict = dict()
 
     def iterate(self, ls):
+        # Iterate over the array with values [unix, value]
         arr = list()
         for i in ls:
+            # Return an array in the same format as the original object.
             arr.append([datetime.fromtimestamp(i[0] / 1000).date(), i[1]])
         return arr
 
@@ -57,10 +59,14 @@ class RawResponse:
                 for c in data:
                     self.response_dict[c] = {}
                     for k in data[c]:
+                        # Update dict_key[coin] with k(price, total_volumes, market_caps) with [[datetime, value], etc.]
                         self.response_dict[c].update({k: self.iterate(data[c][k])})
             else:
                 for k in data:
+                    # Update k(price, total_volumes, market_caps) with [[datetime, value], etc.]
                     self.response_dict.update({k: self.iterate(data[k])})
         else:
+            # Raise type error, data is not a dict.
             raise_type_error("Data must either be of type dict")
+        # Return response dict
         return self.response_dict
