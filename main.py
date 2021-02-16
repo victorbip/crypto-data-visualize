@@ -10,5 +10,3 @@ print(resp)
 
 for c in resp['prices']:
     print(c)
-
-#
