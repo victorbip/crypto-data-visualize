@@ -1,6 +1,8 @@
-import config
 from datetime import datetime
+
 from pycoingecko import CoinGeckoAPI
+
+import config
 
 
 def raise_type_error(message):
@@ -34,7 +36,8 @@ class CoinClient:
             return True, self.response_dict
         # Raise TypeError is self.ticker isn't a string or list.
         else:
-            raise_type_error("Ticker must either be a string or list of strings.")
+            raise_type_error(
+                "Ticker must either be a string or list of strings.")
 
 
 class RawResponse:
@@ -61,7 +64,8 @@ class RawResponse:
                     self.response_dict[c] = {}
                     for k in data[c]:
                         # Update dict_key[coin] with k(price, total_volumes, market_caps) with [[datetime, value], etc.]
-                        self.response_dict[c].update({k: self.__iterate(data[c][k])})
+                        self.response_dict[c].update(
+                            {k: self.__iterate(data[c][k])})
             else:
                 self.response_dict['multiple'] = False
                 for k in data:
